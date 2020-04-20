@@ -12,6 +12,10 @@
  * GNU General Public License for more details.
  */
 
+&apps_iommu {
+	qcom,no-aarch64;
+};
+
 &other_ext_mem {
 	compatible = "removed-dma-pool";
 	no-map;
