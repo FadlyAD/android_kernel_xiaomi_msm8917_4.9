@@ -58,13 +58,9 @@
 		"AMIC1", "MIC BIAS External",
 		"AMIC2", "MIC BIAS External2",
 		"AMIC3", "MIC BIAS External";
-	asoc-codec = <&stub_codec>, <&pm8937_cajon_dig>, <&hdmi_dba>;
-	asoc-codec-names = "msm-stub-codec.1", "cajon_codec",
+	asoc-codec = <&stub_codec>, <&msm_digital_codec>, <&hdmi_dba>;
+	asoc-codec-names = "msm-stub-codec.1",
 			"msm-hdmi-dba-codec-rx";
-};
-
-&wsa881x_i2c_e {
-	status = "disable";
 };
 
 &wsa881x_i2c_f {
