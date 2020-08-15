@@ -674,6 +674,10 @@ endif
 
 dtb-$(CONFIG_ARCH_SDM845_VM) += sdm845-vm.dtb
 
+dtb-$(CONFIG_MACH_XIAOMI_ULYSSE) := \
+	xiaomi/msm8940-pmi8937-mtp-ugg.dtb \
+	xiaomi/msm8917-pmi8937-mtp-ugglite.dtb
+
 always		:= $(dtb-y)
 subdir-y	:= $(dts-dirs)
 clean-files	:= *.dtb *.dtbo

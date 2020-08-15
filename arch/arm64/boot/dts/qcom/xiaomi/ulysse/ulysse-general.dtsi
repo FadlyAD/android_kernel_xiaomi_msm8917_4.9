@@ -1,0 +1,83 @@
+/*
+ * Copyright (c) 2016-2021, The Linux Foundation. All rights reserved.
+ * Copyright (C) 2018 XiaoMi, Inc.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+&other_ext_mem {
+	compatible = "removed-dma-pool";
+	no-map;
+	reg = <0x0 0x84a00000 0x0 0x1E00000>;
+};
+
+&soc {
+	qcom,bcl {
+		/delete-property/ qcom,bcl-enable;
+		#qcom,bcl-enable;
+	};
+
+	/delete-node/ pericom-type-c@1d;
+
+	qcom,wdt@b017000 {
+		qcom,bark-time = <15000>;
+	};
+
+	sn_fuse: snfuse@0xA4128 {
+		compatible = "qcom,sn-fuse";
+		reg = <0xA4128 0x4>,
+		 <0xA6034 0x4>;
+		reg-names = "sn-base","fuse-state";
+	};
+
+	/delete-node/ qseecom@85b00000;
+
+	qcom_seecom: qseecom@84a00000 {
+		compatible = "qcom,qseecom";
+		reg = <0x84a00000 0x1900000>;
+		reg-names = "secapp-region";
+		qcom,hlos-num-ce-hw-instances = <1>;
+		qcom,hlos-ce-hw-instance = <0>;
+		qcom,qsee-ce-hw-instance = <0>;
+		qcom,disk-encrypt-pipe-pair = <2>;
+		qcom,support-fde;
+		qcom,appsbl-qseecom-support;
+		qcom,msm-bus,name = "qseecom-noc";
+		qcom,msm-bus,num-cases = <4>;
+		qcom,msm-bus,num-paths = <1>;
+		qcom,support-bus-scaling;
+		qcom,msm-bus,vectors-KBps =
+			<55 512 0 0>,
+			<55 512 0 0>,
+			<55 512 120000 1200000>,
+			<55 512 393600 3936000>;
+		clocks = <&clock_gcc clk_crypto_clk_src>,
+			 <&clock_gcc clk_gcc_crypto_clk>,
+			 <&clock_gcc clk_gcc_crypto_ahb_clk>,
+			 <&clock_gcc clk_gcc_crypto_axi_clk>;
+		clock-names = "core_clk_src", "core_clk",
+				"iface_clk", "bus_clk";
+		qcom,ce-opp-freq = <100000000>;
+	};
+
+};
+
+&sdhc_2 {
+	cd-gpios = <&tlmm 67 0x0>;
+};
+
+&usb_otg {
+	interrupts = <0 134 0>,<0 140 0>,<0 136 0>;
+	interrupt-names = "core_irq", "async_irq","phy_irq";
+
+	qcom,hsusb-otg-mode = <3>;
+	vbus_otg-supply = <&bq2560x_otg_supply>;
+	qcom,hsusb-otg-phy-init-seq = <0x38 0x81 0xffffffff>;
+};
