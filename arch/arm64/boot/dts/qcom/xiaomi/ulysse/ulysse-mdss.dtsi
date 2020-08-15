@@ -31,3 +31,8 @@
 	qcom,ocp2131-enn-gpio = <&tlmm 13 0>;
 };
 
+&mdss_fb0 {
+	qcom,cont-splash-memory {
+		linux,contiguous-region = <0xb4>;
+	};
+};
