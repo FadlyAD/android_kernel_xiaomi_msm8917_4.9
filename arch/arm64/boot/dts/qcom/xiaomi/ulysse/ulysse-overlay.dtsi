@@ -20,3 +20,6 @@
 #include "ulysse-pinctrl.dtsi"
 #include "ulysse-pm.dtsi"
 #include "ulysse-touchscreen.dtsi"
+
+#include "ulysse-disable.dtsi"
+
