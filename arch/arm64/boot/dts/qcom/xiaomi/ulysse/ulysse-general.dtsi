@@ -97,6 +97,10 @@
 	cd-gpios = <&tlmm 67 0x0>;
 };
 
+&thermal_zones {
+    /delete-node/ pa-therm1-adc;
+};
+
 &usb_otg {
 	interrupts = <0 134 0>,<0 140 0>,<0 136 0>;
 	interrupt-names = "core_irq", "async_irq","phy_irq";
