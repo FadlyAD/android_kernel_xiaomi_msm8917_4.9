@@ -64,7 +64,11 @@ static bool force_warm_reboot;
  * There is no API from TZ to re-enable the registers.
  * So the SDI cannot be re-enabled when it already by-passed.
  */
+#ifdef CONFIG_MACH_XIAOMI_ULYSSE
+int download_mode = 1;
+#else
 static int download_mode = 1;
+#endif
 #else
 static const int download_mode;
 #endif
@@ -76,7 +80,11 @@ static const int download_mode;
 #define KASLR_OFFSET_PROP "qcom,msm-imem-kaslr_offset"
 #endif
 
+#ifdef CONFIG_MACH_XIAOMI_ULYSSE
+int in_panic;
+#else
 static int in_panic;
+#endif
 static int dload_type = SCM_DLOAD_FULLDUMP;
 static void *dload_mode_addr;
 static bool dload_mode_enabled;
