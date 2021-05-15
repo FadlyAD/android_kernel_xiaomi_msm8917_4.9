@@ -2133,15 +2133,9 @@ static irqreturn_t bq2560x_charger_interrupt(int irq, void *dev_id)
 	} else if (bq->power_good && !bq->usb_present) {
 		bq->usb_present = true;
 		prop.intval = 1;
-		msleep(10);
-		if (bq->usb_supply_type == POWER_SUPPLY_TYPE_USB
-				|| bq->usb_supply_type == POWER_SUPPLY_TYPE_USB_CDP
-				|| bq->usb_supply_type == POWER_SUPPLY_TYPE_USB_DCP) {
-			val.intval = true;
-			extcon_set_property(bq->extcon, EXTCON_USB, EXTCON_PROP_USB_SS, val);
-		}
-		extcon_set_cable_state_(bq->extcon, EXTCON_USB, true);
 		bq2560x_request_dpdm(bq, true);
+		msleep(10);
+		extcon_set_cable_state_(bq->extcon, EXTCON_USB, true);
 
 		cancel_delayed_work(&bq->discharge_jeita_work);
 
@@ -2154,6 +2148,8 @@ static irqreturn_t bq2560x_charger_interrupt(int irq, void *dev_id)
 
 		pr_err("usb plugged in, set usb present = %d\n", bq->usb_present);
 	}
+
+	power_supply_changed(bq->usb_psy);
 
 	bq2560x_update_status(bq);
 
@@ -2173,11 +2169,19 @@ static void determine_initial_status(struct bq2560x *bq)
 	if (!ret)
 		bq->in_hiz = !!status;
 
+
 	if (bq->usb_present) {
+		msleep(10);
 		bq2560x_request_dpdm(bq, true);
 	}
-
 	bq2560x_charger_interrupt(bq->client->irq, bq);
+
+	if(!bq->usb_present)
+		extcon_set_cable_state_(bq->extcon, EXTCON_USB, false);
+	else
+		extcon_set_cable_state_(bq->extcon, EXTCON_USB, true);
+
+	power_supply_changed(bq->usb_psy);
 }
 
 
