@@ -748,7 +748,7 @@ static int bq2560x_get_batt_property(struct bq2560x *bq,
 	if (!bms_psy)
 		return -EINVAL;
 
-	ret = bms_psy->desc->get_property(bms_psy, psp, val);
+	ret = power_supply_get_property(bms_psy, psp, val);
 
 	return ret;
 }
@@ -1086,7 +1086,7 @@ static int bq2560x_update_charging_profile(struct bq2560x *bq)
 	if (!bq->usb_present)
 		return 0;
 
-	ret = bq->usb_psy->desc->get_property(bq->usb_psy, POWER_SUPPLY_PROP_TYPE, &prop);
+	ret = power_supply_get_property(bq->usb_psy, POWER_SUPPLY_PROP_TYPE, &prop);
 
 	if (ret < 0) {
 		pr_err("couldn't read USB TYPE property, ret=%d\n", ret);
@@ -1207,7 +1207,7 @@ static void bq2560x_external_power_changed(struct power_supply *psy)
 	int ret, current_limit = 0;
 
 
-	ret = bq->usb_psy->desc->get_property(bq->usb_psy, POWER_SUPPLY_PROP_CURRENT_MAX, &prop);
+	ret = power_supply_get_property(bq->usb_psy, POWER_SUPPLY_PROP_CURRENT_MAX, &prop);
 	if (ret < 0)
 		pr_err("could not read USB current_max property, ret=%d\n", ret);
 	else
@@ -1222,7 +1222,7 @@ static void bq2560x_external_power_changed(struct power_supply *psy)
 		bq2560x_update_charging_profile(bq);
 	}
 
-	ret = bq->usb_psy->desc->get_property(bq->usb_psy, POWER_SUPPLY_PROP_ONLINE, &prop);
+	ret = power_supply_get_property(bq->usb_psy, POWER_SUPPLY_PROP_ONLINE, &prop);
 	if (ret < 0)
 		pr_err("could not read USB ONLINE property, ret=%d\n", ret);
 	else
@@ -1232,12 +1232,16 @@ static void bq2560x_external_power_changed(struct power_supply *psy)
 	if (bq->usb_present && (current_limit != 2)) {
 		if (prop.intval == 0) {
 			pr_err("set usb online\n");
-			ret = 1;
+			prop.intval = 1;
+			ret = power_supply_set_property(bq->usb_psy,
+				POWER_SUPPLY_PROP_ONLINE, &prop);
 		}
 	} else {
 		if (prop.intval == 1) {
 			pr_err("set usb offline\n");
-			ret = 0;
+			prop.intval = 1;
+			ret = power_supply_set_property(bq->usb_psy,
+				POWER_SUPPLY_PROP_ONLINE, &prop);
 		}
 	}
 
@@ -1911,7 +1915,7 @@ static void bq2560x_dump_fg_reg(struct bq2560x *bq)
 	if (++dump_cnt >= (FG_LOG_INTERVAL / calculate_jeita_poll_interval(bq))) {
 		dump_cnt = 0;
 		val.intval = 0;
-		bq->bms_psy->desc->set_property(bq->bms_psy,
+		power_supply_set_property(bq->bms_psy,
 				POWER_SUPPLY_PROP_UPDATE_NOW, &val);
 	}
 }
