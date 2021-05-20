@@ -20,7 +20,6 @@
 #include "../msm8917-pmi8937.dtsi"
 
 #include "ulysse/ulysse-overlay.dtsi"
-#include "ulysse/ugglite/ugglite-overlay.dtsi"
 
 / {
 	model = "Qualcomm Technologies, Inc. MSM8917-PMI8937 MTP";

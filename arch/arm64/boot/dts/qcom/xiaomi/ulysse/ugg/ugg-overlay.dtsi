@@ -12,7 +12,4 @@
  * GNU General Public License for more details.
  */
 
-
-#include "ugg-camera.dtsi"
 #include "ugg-fingerprint.dtsi"
-#include "ugg-pinctrl.dtsi"
